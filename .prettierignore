@@ -2,6 +2,11 @@
 node_modules
 build
 coverage
+.husky
+*.yml
+
+# Packages
+*.tgz
 
 # Editor
 .vscode
@@ -9,9 +14,5 @@ coverage
 # System
 .DS_Store
 
-# Never commit keys to Git!
-keys
-
-# O1JS
-caches
-profiler
+# Misc
+LICENSE
