@@ -3,8 +3,8 @@ import { TwoLevelStorage } from './two-level.js';
 import {
     EmptyMT4,
     EmptyMT6,
-    EmptyMTWitness4,
-    EmptyMTWitness6,
+    NewMTWitness4,
+    NewMTWitness6,
     MTWitness4,
     MTWitness6,
 } from './merkle-tree.js';
@@ -29,9 +29,9 @@ describe('Two Level Storage', () => {
     it('Should create new storage', async () => {
         testStorage = new TestStorage(
             EmptyMT4,
-            EmptyMTWitness4,
+            NewMTWitness4,
             EmptyMT6,
-            EmptyMTWitness6
+            NewMTWitness6
         );
     });
 

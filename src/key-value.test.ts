@@ -1,36 +1,35 @@
 import { Field, Provable } from 'o1js';
-import { OneLevelStorage } from './one-level.js';
-import { EmptyMT4, NewMTWitness4, MTWitness4 } from './merkle-tree.js';
+import { KeyValueStorage } from './key-value.js';
 
-class TestStorage extends OneLevelStorage<Field, MTWitness4> {
+class TestStorage extends KeyValueStorage<Field> {
     calculateLeaf(leaf: Field): Field {
         return leaf;
     }
 
-    calculateLevel1Index(index: Field): Field {
+    calculateKey(index: Field): Field {
         return index;
     }
 }
 
-describe('Single Level Storage', () => {
+describe('Key Value Storage', () => {
     let testStorage: TestStorage;
 
     it('Should create new storage', async () => {
-        testStorage = new TestStorage(EmptyMT4, NewMTWitness4);
+        testStorage = new TestStorage();
     });
 
-    it('Should update raw leaf', async () => {
+    it('Should update raw value', async () => {
         let value = Field(123);
-        testStorage.updateRawLeaf({ level1Index: Field(0) }, value);
+        testStorage.updateRawValue(Field(0), value);
         let witness = testStorage.getWitness(Field(0));
         expect(witness.calculateRoot(value).toBigInt()).toEqual(
             testStorage.root.toBigInt()
         );
     });
 
-    it('Should update leaf', async () => {
+    it('Should update value', async () => {
         let value = Field(123);
-        testStorage.updateLeaf({ level1Index: Field(1) }, value);
+        testStorage.updateValue(Field(1), value);
         let witness = testStorage.getWitness(Field(1));
         expect(witness.calculateRoot(value).toBigInt()).toEqual(
             testStorage.root.toBigInt()
@@ -38,6 +37,6 @@ describe('Single Level Storage', () => {
     });
 
     it('Should get public data', async () => {
-        Provable.log(testStorage.root, testStorage.leafs, testStorage.level1);
+        Provable.log(testStorage.root, testStorage.mapping, testStorage.values);
     });
 });
