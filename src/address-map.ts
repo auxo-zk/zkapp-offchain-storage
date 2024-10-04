@@ -7,7 +7,7 @@ import { OneLevelStorage } from './one-level.js';
 export { AddressMap, ZkAppRef };
 
 const ZkAppRef = (num_addr: number) => {
-    const [MTWitness, ,] = getBestHeight(num_addr);
+    const [MTWitness, ,] = getBestHeight(BigInt(num_addr));
     class _ZkAppRef extends Struct({
         address: PublicKey,
         witness: MTWitness,
@@ -16,7 +16,7 @@ const ZkAppRef = (num_addr: number) => {
 };
 
 const AddressMap = (num_addr: number) => {
-    const [MTWitness, NewMTWitness, EmptyMT] = getBestHeight(num_addr);
+    const [MTWitness, NewMTWitness, EmptyMT] = getBestHeight(BigInt(num_addr));
     class _ZkAppRef extends ZkAppRef(num_addr) {}
 
     return class _AddressMap extends OneLevelStorage<

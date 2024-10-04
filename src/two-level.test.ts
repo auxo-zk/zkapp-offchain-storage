@@ -3,8 +3,8 @@ import { TwoLevelStorage } from './two-level.js';
 import { getBestHeight } from './merkle-tree.js';
 
 describe('Two Level Storage', () => {
-    const [MTWitnessL1, NewMTWitnessL1, EmptyMTL1] = getBestHeight(4);
-    const [MTWitnessL2, NewMTWitnessL2, EmptyMTL2] = getBestHeight(6);
+    const [MTWitnessL1, NewMTWitnessL1, EmptyMTL1] = getBestHeight(16n);
+    const [MTWitnessL2, NewMTWitnessL2, EmptyMTL2] = getBestHeight(64n);
 
     class TestStorage extends TwoLevelStorage<
         Field,
@@ -79,9 +79,7 @@ describe('Two Level Storage', () => {
             testStorage.leafs,
             testStorage.level1,
             testStorage.level2s,
-            testStorage.level2(Field(0)),
-            testStorage.height1,
-            testStorage.height2,
-            testStorage.size;
+            testStorage.level2(Field(0));
+        console.log(testStorage.height1, testStorage.height2, testStorage.size);
     });
 });

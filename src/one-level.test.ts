@@ -3,7 +3,8 @@ import { OneLevelStorage } from './one-level.js';
 import { getBestHeight } from './merkle-tree.js';
 
 describe('Single Level Storage', () => {
-    const [MTWitness, NewMTWitness, EmptyMT] = getBestHeight(4);
+    const size = BigInt(2 ** 3);
+    const [MTWitness, NewMTWitness, EmptyMT] = getBestHeight(size);
     class TestStorage extends OneLevelStorage<Field, typeof MTWitness> {
         static readonly height = MTWitness.height;
 
@@ -51,6 +52,15 @@ describe('Single Level Storage', () => {
         expect(witness.calculateRoot(value).toBigInt()).toEqual(
             testStorage.root.toBigInt()
         );
+    });
+
+    it('Should have correct size', async () => {
+        for (let i = 0; i < Number(size); i++) {
+            testStorage.updateLeaf({ level1Index: Field(i) }, Field(i));
+        }
+        expect(() =>
+            testStorage.updateLeaf({ level1Index: Field(size) }, Field(size))
+        ).toThrowError();
     });
 
     it('Should get public data', async () => {

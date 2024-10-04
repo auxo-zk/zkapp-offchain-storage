@@ -1,6 +1,6 @@
 import { Field, MerkleTree } from 'o1js';
 import { BaseStorage } from './base-storage.js';
-import { EmptyMT254, MTWitness254 } from './merkle-tree.js';
+import { EmptyMT255, MTWitness255 } from './merkle-tree.js';
 
 export abstract class KeyValueStorage<RawValue>
     implements BaseStorage<RawValue>
@@ -17,7 +17,7 @@ export abstract class KeyValueStorage<RawValue>
             isRaw: boolean;
         }[]
     ) {
-        this._mapping = EmptyMT254();
+        this._mapping = EmptyMT255();
         this._leafs = {};
         if (leafs) {
             for (let i = 0; i < leafs.length; i++) {
@@ -32,7 +32,7 @@ export abstract class KeyValueStorage<RawValue>
     }
 
     get height(): number {
-        return MTWitness254.height;
+        return MTWitness255.height;
     }
 
     get size(): bigint {
@@ -65,8 +65,8 @@ export abstract class KeyValueStorage<RawValue>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     abstract calculateKey(args: any): Field;
 
-    getWitness(key: Field): MTWitness254 {
-        return new MTWitness254(this._mapping.getWitness(key.toBigInt()));
+    getWitness(key: Field): MTWitness255 {
+        return new MTWitness255(this._mapping.getWitness(key.toBigInt()));
     }
 
     updateLeaf({ index }: { index: Field }, leaf: Field) {
