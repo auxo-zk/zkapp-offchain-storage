@@ -1,4 +1,4 @@
-import { Field, Provable } from 'o1js';
+import { Field } from 'o1js';
 import { KeyValueStorage } from './key-value.js';
 
 class TestStorage extends KeyValueStorage<Field> {
@@ -37,6 +37,10 @@ describe('Key Value Storage', () => {
     });
 
     it('Should get public data', async () => {
-        Provable.log(testStorage.root, testStorage.mapping, testStorage.values);
+        testStorage.root,
+            testStorage.mapping,
+            testStorage.values,
+            testStorage.height,
+            testStorage.size;
     });
 });

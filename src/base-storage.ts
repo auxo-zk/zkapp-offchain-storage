@@ -20,6 +20,7 @@ type Index = {
 };
 
 interface BaseStorage<RawLeaf> {
+    get size(): bigint;
     get root(): Field;
     get leafs(): { [key: string]: { raw: RawLeaf | undefined; leaf: Field } };
     calculateLeaf(args: RawLeaf): Field;

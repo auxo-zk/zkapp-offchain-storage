@@ -5,8 +5,8 @@ import { EmptyMT254, MTWitness254 } from './merkle-tree.js';
 export abstract class KeyValueStorage<RawValue>
     implements BaseStorage<RawValue>
 {
-    private _mapping: MerkleTree;
-    private _leafs: {
+    public _mapping: MerkleTree;
+    public _leafs: {
         [key: string]: { raw: RawValue | undefined; leaf: Field };
     };
 
@@ -29,6 +29,14 @@ export abstract class KeyValueStorage<RawValue>
                 }
             }
         }
+    }
+
+    get height(): number {
+        return MTWitness254.height;
+    }
+
+    get size(): bigint {
+        return BigInt(2 ** (this.height - 1));
     }
 
     get root(): Field {

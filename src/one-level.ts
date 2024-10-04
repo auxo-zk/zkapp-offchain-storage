@@ -4,10 +4,10 @@ import { BaseStorage, Witness } from './base-storage.js';
 export abstract class OneLevelStorage<RawLeaf, MTWitness>
     implements BaseStorage<RawLeaf>
 {
-    private emptyLevel1Tree: () => MerkleTree;
-    private generateLevel1Witness: (witness: Witness) => MTWitness;
-    private _level1: MerkleTree;
-    private _leafs: {
+    public emptyLevel1Tree: () => MerkleTree;
+    public generateLevel1Witness: (witness: Witness) => MTWitness;
+    public _level1: MerkleTree;
+    public _leafs: {
         [key: string]: { raw: RawLeaf | undefined; leaf: Field };
     };
 
@@ -34,6 +34,12 @@ export abstract class OneLevelStorage<RawLeaf, MTWitness>
                 }
             }
         }
+    }
+
+    abstract get height(): number;
+
+    get size(): bigint {
+        return BigInt(2 ** (this.height - 1));
     }
 
     get root(): Field {

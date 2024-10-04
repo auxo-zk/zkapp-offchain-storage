@@ -1,22 +1,38 @@
-import { Field, Provable } from 'o1js';
+import { Field } from 'o1js';
 import { OneLevelStorage } from './one-level.js';
-import { EmptyMT4, NewMTWitness4, MTWitness4 } from './merkle-tree.js';
-
-class TestStorage extends OneLevelStorage<Field, MTWitness4> {
-    calculateLeaf(leaf: Field): Field {
-        return leaf;
-    }
-
-    calculateLevel1Index(index: Field): Field {
-        return index;
-    }
-}
+import { getBestHeight } from './merkle-tree.js';
 
 describe('Single Level Storage', () => {
+    const [MTWitness, NewMTWitness, EmptyMT] = getBestHeight(4);
+    class TestStorage extends OneLevelStorage<Field, typeof MTWitness> {
+        static readonly height = MTWitness.height;
+
+        get height(): number {
+            return TestStorage.height;
+        }
+
+        calculateLeaf(leaf: Field): Field {
+            return leaf;
+        }
+
+        calculateLevel1Index(index: Field): Field {
+            return index;
+        }
+    }
+
     let testStorage: TestStorage;
 
+    it('Should return correct setup for height', () => {
+        expect(MTWitness).toBeDefined();
+        expect(NewMTWitness).toBeDefined();
+        expect(EmptyMT).toBeDefined();
+        expect(MTWitness.empty()).toBeInstanceOf(MTWitness);
+        expect(NewMTWitness).toBeInstanceOf(Function);
+        expect(EmptyMT).toBeInstanceOf(Function);
+    });
+
     it('Should create new storage', async () => {
-        testStorage = new TestStorage(EmptyMT4, NewMTWitness4);
+        testStorage = new TestStorage(EmptyMT, NewMTWitness);
     });
 
     it('Should update raw leaf', async () => {
@@ -38,6 +54,10 @@ describe('Single Level Storage', () => {
     });
 
     it('Should get public data', async () => {
-        Provable.log(testStorage.root, testStorage.leafs, testStorage.level1);
+        testStorage.root,
+            testStorage.leafs,
+            testStorage.level1,
+            testStorage.height,
+            testStorage.size;
     });
 });
