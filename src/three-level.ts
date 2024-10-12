@@ -3,17 +3,26 @@ import { BaseStorage, Witness } from './base-storage.js';
 
 export abstract class ThreeLevelStorage<
     RawLeaf,
-    MTWitnessLevel1,
-    MTWitnessLevel2,
-    MTWitnessLevel3
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MTWitnessLevel1 extends abstract new (...args: any) => any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MTWitnessLevel2 extends abstract new (...args: any) => any,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MTWitnessLevel3 extends abstract new (...args: any) => any
 > implements BaseStorage<RawLeaf>
 {
     public emptyLevel1Tree: () => MerkleTree;
-    public generateLevel1Witness: (witness: Witness) => MTWitnessLevel1;
+    public generateLevel1Witness: (
+        witness: Witness
+    ) => InstanceType<MTWitnessLevel1>;
     public emptyLevel2Tree: () => MerkleTree;
-    public generateLevel2Witness: (witness: Witness) => MTWitnessLevel2;
+    public generateLevel2Witness: (
+        witness: Witness
+    ) => InstanceType<MTWitnessLevel2>;
     public emptyLevel3Tree: () => MerkleTree;
-    public generateLevel3Witness: (witness: Witness) => MTWitnessLevel3;
+    public generateLevel3Witness: (
+        witness: Witness
+    ) => InstanceType<MTWitnessLevel3>;
     public _level1: MerkleTree;
     public _level2s: { [key: string]: MerkleTree };
     public _level3s: { [key: string]: MerkleTree };
@@ -23,11 +32,17 @@ export abstract class ThreeLevelStorage<
 
     constructor(
         emptyLevel1Tree: () => MerkleTree,
-        generateLevel1Witness: (witness: Witness) => MTWitnessLevel1,
+        generateLevel1Witness: (
+            witness: Witness
+        ) => InstanceType<MTWitnessLevel1>,
         emptyLevel2Tree: () => MerkleTree,
-        generateLevel2Witness: (witness: Witness) => MTWitnessLevel2,
+        generateLevel2Witness: (
+            witness: Witness
+        ) => InstanceType<MTWitnessLevel2>,
         emptyLevel3Tree: () => MerkleTree,
-        generateLevel3Witness: (witness: Witness) => MTWitnessLevel3,
+        generateLevel3Witness: (
+            witness: Witness
+        ) => InstanceType<MTWitnessLevel3>,
         leafs?: {
             level1Index: Field;
             level2Index: Field;
@@ -114,13 +129,16 @@ export abstract class ThreeLevelStorage<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     abstract calculateLevel3Index(args: any): Field;
 
-    getLevel1Witness(level1Index: Field): MTWitnessLevel1 {
+    getLevel1Witness(level1Index: Field): InstanceType<MTWitnessLevel1> {
         return this.generateLevel1Witness(
             this._level1.getWitness(level1Index.toBigInt())
         );
     }
 
-    getLevel2Witness(level1Index: Field, level2Index: Field): MTWitnessLevel2 {
+    getLevel2Witness(
+        level1Index: Field,
+        level2Index: Field
+    ): InstanceType<MTWitnessLevel2> {
         let level2 = this.level2(level1Index);
         if (level2 === undefined)
             throw new Error('Level 2 MT does not exist at this index');
@@ -133,7 +151,7 @@ export abstract class ThreeLevelStorage<
         level1Index: Field,
         level2Index: Field,
         level3Index: Field
-    ): MTWitnessLevel3 {
+    ): InstanceType<MTWitnessLevel3> {
         let level3 = this.level3(level1Index, level2Index);
         if (level3 === undefined)
             throw new Error('Level 3 MT does not exist at this index');
@@ -147,9 +165,9 @@ export abstract class ThreeLevelStorage<
         level2Index: Field,
         level3Index: Field
     ): {
-        level1: MTWitnessLevel1;
-        level2: MTWitnessLevel2;
-        level3: MTWitnessLevel3;
+        level1: InstanceType<MTWitnessLevel1>;
+        level2: InstanceType<MTWitnessLevel2>;
+        level3: InstanceType<MTWitnessLevel3>;
     } {
         return {
             level1: this.getLevel1Witness(level1Index),

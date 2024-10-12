@@ -8,11 +8,10 @@ export { AddressMap, ZkAppRef };
 
 const ZkAppRef = (num_addr: number) => {
     const [MTWitness, ,] = getBestHeight(BigInt(num_addr));
-    class _ZkAppRef extends Struct({
+    return class _ZkAppRef extends Struct({
         address: PublicKey,
         witness: MTWitness,
-    }) {}
-    return _ZkAppRef;
+    }) {};
 };
 
 const AddressMap = (num_addr: number) => {
@@ -25,7 +24,7 @@ const AddressMap = (num_addr: number) => {
     > {
         public override generateLevel1Witness: (
             witness: Witness
-        ) => typeof MTWitness;
+        ) => InstanceType<typeof MTWitness>;
         public _level1: MerkleTree;
         public _leafs: {
             [key: string]: { raw: PublicKey | undefined; leaf: Field };
@@ -85,7 +84,7 @@ const AddressMap = (num_addr: number) => {
             return _AddressMap.calculateIndex(index);
         }
 
-        getWitness(index: Field): typeof MTWitness {
+        getWitness(index: Field): InstanceType<typeof MTWitness> {
             return super.getWitness(index);
         }
 

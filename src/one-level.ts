@@ -1,11 +1,14 @@
 import { Field, MerkleTree } from 'o1js';
 import { BaseStorage, Witness } from './base-storage.js';
 
-export abstract class OneLevelStorage<RawLeaf, MTWitness>
-    implements BaseStorage<RawLeaf>
+export abstract class OneLevelStorage<
+    RawLeaf,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    MTWitness extends abstract new (...args: any) => any
+> implements BaseStorage<RawLeaf>
 {
     public emptyLevel1Tree: () => MerkleTree;
-    public generateLevel1Witness: (witness: Witness) => MTWitness;
+    public generateLevel1Witness: (witness: Witness) => InstanceType<MTWitness>;
     public _level1: MerkleTree;
     public _leafs: {
         [key: string]: { raw: RawLeaf | undefined; leaf: Field };
@@ -13,7 +16,7 @@ export abstract class OneLevelStorage<RawLeaf, MTWitness>
 
     constructor(
         emptyLevel1Tree: () => MerkleTree,
-        generateLevel1Witness: (witness: Witness) => MTWitness,
+        generateLevel1Witness: (witness: Witness) => InstanceType<MTWitness>,
         leafs?: {
             level1Index: Field;
             leaf: RawLeaf | Field;
@@ -59,13 +62,13 @@ export abstract class OneLevelStorage<RawLeaf, MTWitness>
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     abstract calculateLevel1Index(args: any): Field;
 
-    getLevel1Witness(level1Index: Field): MTWitness {
+    getLevel1Witness(level1Index: Field): InstanceType<MTWitness> {
         return this.generateLevel1Witness(
             this._level1.getWitness(level1Index.toBigInt())
         );
     }
 
-    getWitness(level1Index: Field): MTWitness {
+    getWitness(level1Index: Field): InstanceType<MTWitness> {
         return this.getLevel1Witness(level1Index);
     }
 

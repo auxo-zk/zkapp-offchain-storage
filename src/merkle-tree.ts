@@ -1,7 +1,18 @@
-import { MerkleTree, MerkleWitness } from 'o1js';
+import { Bool, Field, MerkleTree, MerkleWitness, Struct } from 'o1js';
 import { Witness } from './base-storage';
 
 export const SUPPORTED_HEIGHTS = [2, 3, 4, 5, 6, 8, 10, 16, 32, 64, 128, 255];
+
+declare class BaseMerkleWitness extends Struct({
+    path: [Field],
+    isLeft: [Bool],
+}) {
+    constructor(witness: Witness);
+    static height: number;
+    height(): number;
+    calculateRoot(leaf: Field): Field;
+    calculateIndex(): Field;
+}
 
 export class MTWitness2 extends MerkleWitness(2) {}
 export const NewMTWitness2 = (wtn: Witness) => new MTWitness2(wtn);
@@ -51,7 +62,13 @@ export class MTWitness255 extends MerkleWitness(255) {}
 export const NewMTWitness255 = (wtn: Witness) => new MTWitness255(wtn);
 export const EmptyMT255 = () => new MerkleTree(255);
 
-export function getBestHeight(size: bigint) {
+export function getBestHeight(
+    size: bigint
+): [
+    typeof BaseMerkleWitness,
+    (wtn: Witness) => InstanceType<typeof BaseMerkleWitness>,
+    () => MerkleTree
+] {
     for (const height of SUPPORTED_HEIGHTS) {
         if (size <= BigInt(2 ** (height - 1))) {
             console.log(`Using height: ${height}`);
