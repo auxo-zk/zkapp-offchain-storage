@@ -54,6 +54,7 @@ export const EmptyMT255 = () => new MerkleTree(255);
 export function getBestHeight(size: bigint) {
     for (const height of SUPPORTED_HEIGHTS) {
         if (size <= BigInt(2 ** (height - 1))) {
+            console.log(`Using height: ${height}`);
             return [
                 eval(`MTWitness${height}`),
                 eval(`NewMTWitness${height}`),

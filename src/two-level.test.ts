@@ -4,7 +4,7 @@ import { getBestHeight } from './merkle-tree.js';
 
 describe('Two Level Storage', () => {
     const [MTWitnessL1, NewMTWitnessL1, EmptyMTL1] = getBestHeight(16n);
-    const [MTWitnessL2, NewMTWitnessL2, EmptyMTL2] = getBestHeight(64n);
+    const [MTWitnessL2, NewMTWitnessL2, EmptyMTL2] = getBestHeight(32n);
 
     class TestStorage extends TwoLevelStorage<
         Field,
